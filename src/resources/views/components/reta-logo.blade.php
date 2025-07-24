@@ -1,0 +1,1 @@
+<img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Logo_RETA_Software.png" alt="RETA Logo" class="block h-9 w-auto" />

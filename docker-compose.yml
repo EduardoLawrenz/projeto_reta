@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: ./docker/php
+    container_name: reta_app
+    volumes:
+      - ./src:/var/www
+    working_dir: /var/www
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - node
+
+  db:
+    image: mysql:8
+    container_name: reta_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: reta
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: reta
+      MYSQL_PASSWORD: reta
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  node:
+    image: node:18
+    container_name: reta_node
+    working_dir: /var/www
+    volumes:
+      - ./src:/var/www
+    command: tail -f /dev/null
+
+volumes:
+  db_data:

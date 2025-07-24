@@ -1,0 +1,43 @@
+# Logs
+*.log
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Ambiente
+.env
+.env.backup
+.env.production
+
+# PHP / Laravel
+.phpactor.json
+.phpunit.result.cache
+/.phpunit.cache
+/storage/*.key
+
+# IDEs e ferramentas
+/.fleet
+/.idea
+/.nova
+/.vscode
+/.zed
+
+# Composer / Auth
+auth.json
+
+# Node / Vite
+/node_modules/
+/public/build
+/public/hot
+
+# Storage público e pail
+/public/storage
+/storage/pail
+
+# Dependências do Laravel
+/vendor/
+
+# Homestead
+Homestead.json
+Homestead.yaml
