@@ -18,4 +18,8 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
-CMD ["php-fpm"]
+# Abrir porta esperada pelo Render
+EXPOSE 8080
+
+# Iniciar Laravel com servidor HTTP interno
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8080"]
