@@ -1,6 +1,6 @@
-FROM php:8.2-fpm
+FROM php:8.2-cli
 
-# Instalar dependências do sistema
+# Instalar dependências
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -18,8 +18,8 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
-# Abrir porta esperada pelo Render
+# Abrir porta usada pelo Laravel
 EXPOSE 8080
 
-# Iniciar Laravel com servidor HTTP interno
+# Rodar Laravel via artisan serve
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8080"]
