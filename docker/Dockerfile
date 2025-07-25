@@ -1,39 +1,41 @@
-# Etapa 1: imagem base com PHP e Composer
-FROM php:8.2-cli
+FROM php:8.2-apache
 
-# Instala extensões necessárias
+# Instala dependências do sistema e extensões do PHP
 RUN apt-get update && apt-get install -y \
-    git curl zip unzip libzip-dev libpng-dev libonig-dev libxml2-dev libpq-dev \
+    git zip unzip libzip-dev libpng-dev libonig-dev libxml2-dev libpq-dev \
     && docker-php-ext-install pdo pdo_mysql zip mbstring exif pcntl bcmath fileinfo
+
+# Ativa o mod_rewrite do Apache
+RUN a2enmod rewrite
+
+# Copia os arquivos do projeto para /var/www/html
+COPY ./src /var/www/html
+
+# Define o diretório de trabalho
+WORKDIR /var/www/html
 
 # Instala o Composer
 COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
 
-# Define diretório de trabalho
-WORKDIR /var/www/src
-
-# Copia os arquivos da aplicação
-COPY ./src /var/www/src
-
 # Instala dependências do Laravel
 RUN composer install --no-dev --optimize-autoloader
 
-# Copia .env.example como .env se ainda não existir
+# Copia .env.example como .env se não existir
 RUN if [ ! -f .env ]; then cp .env.example .env; fi
 
-# Gera chave da aplicação
+# Gera chave do Laravel
 RUN php artisan key:generate
 
-# Gera caches (não falha se der erro)
+# Gera caches
 RUN php artisan config:cache || true
 RUN php artisan route:cache || true
 RUN php artisan view:cache || true
 
-# Permissões
-RUN chown -R www-data:www-data /var/www/src/storage /var/www/src/bootstrap/cache
+# Define permissões para as pastas necessárias
+RUN chown -R www-data:www-data storage bootstrap/cache
 
-# Exponha a porta padrão do Laravel
-EXPOSE 8000
+# Expõe a porta HTTP padrão (Render detecta)
+EXPOSE 80
 
-# Comando padrão: roda Laravel com servidor embutido
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+# Inicia o Apache
+CMD ["apache2-foreground"]
