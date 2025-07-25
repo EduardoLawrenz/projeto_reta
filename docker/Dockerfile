@@ -1,38 +1,45 @@
-# Imagem base com PHP + Apache
 FROM php:8.2-apache
 
-# Instala extensões do PHP
+# Instala dependências
 RUN apt-get update && apt-get install -y \
     git curl zip unzip libzip-dev libpng-dev libonig-dev libxml2-dev libpq-dev \
     && docker-php-ext-install pdo pdo_mysql zip mbstring exif pcntl bcmath fileinfo
 
-# Instala o Composer
+# Instala Composer
 COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
 
-# Ativa o módulo de reescrita do Apache
-RUN a2enmod rewrite
+# Define root do Apache para public/
+ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 
-# Define o diretório de trabalho do Apache
-WORKDIR /var/www/html
+# Altera configuração do Apache para apontar para /public
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/000-default.conf \
+    && echo "<Directory /var/www/html/public>\nOptions Indexes FollowSymLinks\nAllowOverride All\nRequire all granted\n</Directory>" > /etc/apache2/conf-available/laravel.conf \
+    && a2enconf laravel \
+    && a2enmod rewrite
 
-# Copia os arquivos da aplicação (de src/) para o Apache
+# Copia o projeto Laravel
 COPY ./src /var/www/html
 
-# Corrige permissões
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# Define diretório de trabalho
+WORKDIR /var/www/html
 
-# Copia .env.example como .env se não existir
+# Cria .env se não existir
 RUN [ -f .env ] || cp .env.example .env
 
-# Instala dependências do Laravel e gera caches
-RUN composer install --no-dev --optimize-autoloader \
-    && php artisan key:generate \
-    && php artisan config:cache \
-    && php artisan route:cache \
-    && php artisan view:cache
+# Instala dependências Laravel
+RUN composer install --no-dev --optimize-autoloader
 
-# Expõe a porta padrão HTTP
+# Gera chave e caches
+RUN php artisan key:generate \
+ && php artisan config:cache \
+ && php artisan route:cache \
+ && php artisan view:cache
+
+# Permissões
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+
+# Expõe porta padrão do Apache
 EXPOSE 80
 
-# Inicia o Apache
+# Inicia Apache
 CMD ["apache2-foreground"]
