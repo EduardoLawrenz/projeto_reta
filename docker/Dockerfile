@@ -32,8 +32,8 @@ RUN composer install --no-dev --optimize-autoloader
 # Gera chave e caches do Laravel
 RUN php artisan key:generate \
  && php artisan config:cache \
- && php artisan route:cache \
- && php artisan view:cache
+ && php artisan route:cache
+# && php artisan view:cache
 
 # Corrige permissões para Laravel
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
