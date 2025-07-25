@@ -1,11 +1,11 @@
 FROM php:8.2-apache
 
-# Instala dependências necessárias
+# Instala dependências do sistema e extensões PHP
 RUN apt-get update && apt-get install -y \
     git curl zip unzip libzip-dev libpng-dev libonig-dev libxml2-dev libpq-dev \
     && docker-php-ext-install pdo pdo_mysql zip mbstring exif pcntl bcmath fileinfo
 
-# Instala Composer
+# Instala o Composer
 COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
 
 # Define o root do Apache para /public
@@ -17,29 +17,28 @@ RUN sed -ri -e "s!/var/www/html!${APACHE_DOCUMENT_ROOT}!g" /etc/apache2/sites-av
     && a2enconf laravel \
     && a2enmod rewrite
 
-# Copia o projeto para dentro do container
+# Copia os arquivos do projeto
 COPY ./src /var/www/html
 
 # Define o diretório de trabalho
 WORKDIR /var/www/html
 
 # Cria .env se não existir
-RUN [ -f .env ] || cp .env.example .env
+RUN test -f .env || cp .env.example .env
 
-# Instala dependências Laravel
+# Instala dependências do Laravel
 RUN composer install --no-dev --optimize-autoloader
 
-# Gera chave e caches do Laravel
+# Gera chave da aplicação e cache de config e rotas
 RUN php artisan key:generate \
  && php artisan config:cache \
- && php artisan route:cache
-# && php artisan view:cache
+ && php artisan route:cache || true
 
-# Corrige permissões para Laravel
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# Corrige permissões de pastas importantes
+RUN chown -R www-data:www-data storage bootstrap/cache
 
 # Expõe a porta padrão do Apache
 EXPOSE 80
 
-# Inicia o Apache
+# Comando de inicialização
 CMD ["apache2-foreground"]
