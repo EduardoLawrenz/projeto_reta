@@ -16,7 +16,11 @@ RUN apt-get update && apt-get install -y \
 # Instalar Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-WORKDIR /var/www
+# Copiar arquivos do projeto para o container
+COPY . /var/www
+
+# Definir diretório de trabalho para onde está o Laravel
+WORKDIR /var/www/src
 
 # Abrir porta usada pelo Laravel
 EXPOSE 8080
