@@ -29,10 +29,15 @@ RUN test -f .env || cp .env.example .env
 # Instala dependências do Laravel
 RUN composer install --no-dev --optimize-autoloader
 
-# Gera chave da aplicação e cache de config e rotas
-RUN php artisan key:generate \
+# Limpa caches antigos e gera nova chave/configs
+RUN php artisan config:clear \
+ && php artisan cache:clear \
+ && php artisan route:clear \
+ && php artisan view:clear \
+ && php artisan key:generate \
  && php artisan config:cache \
- && php artisan route:cache || true
+ && php artisan route:cache \
+ && php artisan view:cache || true
 
 # Corrige permissões de pastas importantes
 RUN chown -R www-data:www-data storage bootstrap/cache
