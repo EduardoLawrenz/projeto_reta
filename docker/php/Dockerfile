@@ -1,29 +1,31 @@
-FROM php:8.2-cli
+# Etapa 1: imagem base com PHP e Composer
+FROM php:8.2-fpm
 
-# Instalar dependências
+# Instala extensões necessárias do PHP
 RUN apt-get update && apt-get install -y \
-    git \
-    curl \
-    unzip \
-    zip \
-    libzip-dev \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    libssl-dev \
-    && docker-php-ext-install pdo pdo_mysql zip mbstring exif pcntl
+    git curl zip unzip libzip-dev libpng-dev libonig-dev libxml2-dev libpq-dev \
+    && docker-php-ext-install pdo pdo_mysql zip mbstring exif pcntl bcmath
 
-# Instalar Composer
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+# Instala o Composer
+COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
 
-# Copiar arquivos do projeto para o container
-COPY . /var/www
-
-# Definir diretório de trabalho para onde está o Laravel
+# Define diretório de trabalho
 WORKDIR /var/www/src
 
-# Abrir porta usada pelo Laravel
-EXPOSE 8080
+# Copia os arquivos da aplicação para dentro do container
+COPY ./src /var/www/src
 
-# Rodar Laravel via artisan serve
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8080"]
+# Instala as dependências do Laravel
+RUN composer install --no-dev --optimize-autoloader \
+    && php artisan config:cache \
+    && php artisan route:cache \
+    && php artisan view:cache
+
+# Permissões
+RUN chown -R www-data:www-data /var/www/src/storage /var/www/src/bootstrap/cache
+
+# Exposição da porta padrão do PHP-FPM
+EXPOSE 9000
+
+# Comando padrão para rodar o container
+CMD ["php-fpm"]
