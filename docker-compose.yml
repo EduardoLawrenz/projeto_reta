@@ -3,6 +3,7 @@ version: '3.8'
 services:
   app:
     build:
+<<<<<<< HEAD
       context: .
       dockerfile: docker/Dockerfile
     container_name: reta_app
@@ -35,6 +36,41 @@ services:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
+=======
+      context: ./docker/php
+    container_name: reta_app
+    ports:
+      - "8080:80"
+    volumes:
+      - ./src:/var/www/html
+    depends_on:
+      - node
+    command: >
+      sh -c "php artisan config:cache &&
+             php artisan migrate --force &&
+             php artisan sync:deputados &&
+             php artisan sync:despesas &&
+             apache2-foreground"
+
+  queue:
+    build:
+      context: ./docker/php
+    container_name: reta_queue
+    volumes:
+      - ./src:/var/www/html
+    depends_on:
+      - app
+    command: >
+      sh -c "php artisan queue:work"
+
+  node:
+    image: node:18
+    container_name: reta_node
+    working_dir: /var/www
+    volumes:
+      - ./src:/var/www
+    command: tail -f /dev/null
+>>>>>>> d624a76 (Corrigindo diversos erros)
 
 volumes:
   db_data:

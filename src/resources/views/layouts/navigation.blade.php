@@ -6,7 +6,17 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
+<<<<<<< HEAD
                         <x-reta-logo />
+=======
+                        {{-- Se o componente existir, usa ele --}}
+                        @if (View::exists('components.reta-logo'))
+                            <x-reta-logo />
+                        @else
+                            {{-- Caso contrário, usa essa imagem garantida --}}
+                            <img src="https://cdn-icons-png.flaticon.com/512/2830/2830280.png" alt="RETA Logo" height="40" />
+                        @endif
+>>>>>>> d624a76 (Corrigindo diversos erros)
                     </a>
                 </div>
 
@@ -48,7 +58,11 @@
                             </x-slot>
                         </x-dropdown>
                     @else
+<<<<<<< HEAD
                         <div class="hidden fixed top-0 right-0 px-6 py-4 sm:flex space-x-4">
+=======
+                        <div class="fixed top-0 right-0 px-6 py-4 sm:flex space-x-4">
+>>>>>>> d624a76 (Corrigindo diversos erros)
                             <a href="{{ route('login') }}" class="text-sm text-gray-700 underline">Entrar</a>
 
                             @if (Route::has('register'))
@@ -61,10 +75,21 @@
 
             <!-- Hamburger -->
             <div class="-mr-2 flex items-center sm:hidden">
+<<<<<<< HEAD
                 <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-700 focus:text-gray-500 transition duration-150 ease-in-out">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                         <path :class="{ 'hidden': open, 'inline-flex': !open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                         <path :class="{ 'hidden': !open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+=======
+                <button @click="open = ! open" type="button" 
+                    class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-700 focus:text-gray-500 transition duration-150 ease-in-out" 
+                    aria-controls="mobile-menu" aria-expanded="false" aria-label="Toggle navigation">
+                    <svg :class="{ 'hidden': open, 'inline-flex': !open }" class="inline-flex h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                    <svg :class="{ 'hidden': !open, 'inline-flex': open }" class="hidden h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+>>>>>>> d624a76 (Corrigindo diversos erros)
                     </svg>
                 </button>
             </div>
@@ -72,7 +97,11 @@
     </div>
 
     <!-- Responsive Navigation Menu -->
+<<<<<<< HEAD
     <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden">
+=======
+    <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden" id="mobile-menu">
+>>>>>>> d624a76 (Corrigindo diversos erros)
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Tela Inicial') }}
@@ -116,4 +145,8 @@
             @endif
         </div>
     </div>
+<<<<<<< HEAD
 </nav>
+=======
+</nav>
+>>>>>>> d624a76 (Corrigindo diversos erros)

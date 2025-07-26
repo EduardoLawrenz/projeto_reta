@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 FROM php:8.2-apache
 
 # Instala dependências do sistema e extensões PHP
@@ -47,3 +48,38 @@ EXPOSE 80
 
 # Comando de inicialização
 CMD ["apache2-foreground"]
+=======
+# Imagem base com Apache
+FROM php:8.2-apache
+
+# Instalar extensões PHP necessárias
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    unzip \
+    zip \
+    libzip-dev \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    libssl-dev \
+    && docker-php-ext-install pdo_mysql mbstring zip exif pcntl bcmath gd
+
+# Ativar mod_rewrite do Apache (necessário para Laravel)
+RUN a2enmod rewrite
+
+# Configurar Apache para apontar para /public (Laravel)
+RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|' /etc/apache2/sites-available/000-default.conf \
+ && sed -i '/<Directory \/var\/www\/>/,/<\/Directory>/c\<Directory /var/www/html/public>\n\tAllowOverride All\n\tRequire all granted\n</Directory>' /etc/apache2/apache2.conf
+# Instalar o Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+# Copiar arquivos do projeto para o container (importante para build no Render)
+COPY . /var/www/html
+
+# Definir o diretório de trabalho padrão
+WORKDIR /var/www/html
+
+# Expor a porta padrão do Apache
+EXPOSE 80
+>>>>>>> d624a76 (Corrigindo diversos erros)
