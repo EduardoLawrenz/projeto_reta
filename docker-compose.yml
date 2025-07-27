@@ -1,56 +1,41 @@
+version: '3.8'
+
 services:
   app:
     build:
-      context: .
-      dockerfile: docker/Dockerfile
+      context: ./docker/php
     container_name: reta_app
-    volumes:
-      - ./src:/var/www/html
     ports:
       - "8080:80"
-    working_dir: /var/www/html
+    volumes:
+      - ./src:/var/www/html
     depends_on:
-      - db
-    environment:
-      - APACHE_DOCUMENT_ROOT=/var/www/html/public
-      - DB_CONNECTION=mysql
-      - DB_HOST=sql10.freesqldatabase.com
-      - DB_PORT=3306
-      - DB_DATABASE=sql10791792
-      - DB_USERNAME=sql10791792
-      - DB_PASSWORD=D2JITWbfbh
+      - node
+    command: >
+      sh -c "php artisan config:cache &&
+             php artisan migrate --force &&
+             php artisan sync:deputados &&
+             php artisan sync:despesas &&
+             apache2-foreground"
 
   queue:
     build:
-      context: .
-      dockerfile: docker/Dockerfile
+      context: ./docker/php
     container_name: reta_queue
-    working_dir: /var/www/html
     volumes:
       - ./src:/var/www/html
-    command: php artisan queue:work
-    restart: unless-stopped
-    environment:
-      - DB_CONNECTION=mysql
-      - DB_HOST=sql10.freesqldatabase.com
-      - DB_PORT=3306
-      - DB_DATABASE=sql10791792
-      - DB_USERNAME=sql10791792
-      - DB_PASSWORD=D2JITWbfbh
+    depends_on:
+      - app
+    command: >
+      sh -c "php artisan queue:work"
 
-  db:
-    image: mysql:8
-    container_name: reta_db
-    restart: unless-stopped
-    environment:
-      MYSQL_DATABASE: reta
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: reta
-      MYSQL_PASSWORD: reta
-    ports:
-      - "3306:3306"
+  node:
+    image: node:18
+    container_name: reta_node
+    working_dir: /var/www
     volumes:
-      - db_data:/var/lib/mysql
+      - ./src:/var/www
+    command: tail -f /dev/null
 
 volumes:
   db_data:

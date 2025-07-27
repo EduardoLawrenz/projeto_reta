@@ -15,14 +15,6 @@
         </p>
 
         <p class="mb-3">
-            Aqui você poderá consultar a lista completa dos deputados, filtrar despesas por categorias, período, estado e partido, além de gerar relatórios exportáveis em CSV para análises detalhadas.
-        </p>
-
-        <p class="mb-3">
-            Toda a sincronização e atualização dos dados é feita em segundo plano utilizando <strong>Laravel Jobs</strong> e filas assíncronas, garantindo desempenho e escalabilidade do sistema.
-        </p>
-
-        <p class="mb-3">
             Use o menu acima para navegar entre as funcionalidades disponíveis e explorar o sistema.
         </p>
 

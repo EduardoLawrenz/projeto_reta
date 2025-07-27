@@ -6,13 +6,7 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                        {{-- Se o componente existir, usa ele --}}
-                        @if (View::exists('components.reta-logo'))
-                            <x-reta-logo />
-                        @else
-                            {{-- Caso contrário, usa essa imagem garantida --}}
-                            <img src="https://cdn-icons-png.flaticon.com/512/2830/2830280.png" alt="RETA Logo" height="40" />
-                        @endif
+                        <img src="https://cdn-icons-png.flaticon.com/512/2830/2830280.png" alt="RETA Logo" height="40" style="height: 40px; width: auto;" />
                     </a>
                 </div>
 
