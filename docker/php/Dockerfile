@@ -17,29 +17,24 @@ RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|' /et
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 # Copiar arquivos do projeto para dentro do container
-COPY ./src /var/www/html
+COPY src /var/www/html
 
 # Definir o diretório de trabalho
 WORKDIR /var/www/html
 
-# Criar .env se não existir
+# Criar .env se não existir (usando shell inline)
 RUN test -f .env || cp .env.example .env
 
 # Instalar dependências PHP do Laravel, otimizado para produção (sem dev)
 RUN composer install --no-dev --optimize-autoloader
 
-# Limpar caches antigos e gerar nova chave/configurações otimizadas
-RUN php artisan config:clear \
- && php artisan cache:clear \
- && php artisan route:clear \
- && php artisan view:clear \
- && php artisan key:generate \
- && php artisan config:cache \
- && php artisan route:cache \
- && php artisan view:cache || true
-
 # Ajustar permissões das pastas de armazenamento e cache
 RUN chown -R www-data:www-data storage bootstrap/cache
+
+# Limpar caches antigos e gerar nova chave/configurações otimizadas
+RUN php artisan key:generate && \
+    php artisan config:clear && php artisan cache:clear && php artisan route:clear && php artisan view:clear && \
+    php artisan config:cache && php artisan route:cache && php artisan view:cache || true
 
 # Expor a porta padrão do Apache
 EXPOSE 80

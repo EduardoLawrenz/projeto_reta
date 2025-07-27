@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 @extends('layouts.app')
 
 @section('content')
@@ -24,10 +23,8 @@
             <button type="submit" class="btn btn-primary">Confirmar</button>
         </div>
     </form>
-=======
-@extends('layouts.guest')
+</div>
 
-@section('content')
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-5">
@@ -50,6 +47,5 @@
             </form>
         </div>
     </div>
->>>>>>> d624a76 (Corrigindo diversos erros)
 </div>
 @endsection

@@ -1,26 +1,25 @@
-version: '3.8'
-
 services:
   app:
     build:
-      context: ./docker/php
+      context: .
+      dockerfile: ./docker/php/Dockerfile
     container_name: reta_app
     ports:
       - "8080:80"
-    volumes:
-      - ./src:/var/www/html
+    # REMOVIDO VOLUME para evitar sobrescrever código copiado no build
     depends_on:
       - node
     command: >
-      sh -c "php artisan config:cache &&
-             php artisan migrate --force &&
-             php artisan sync:deputados &&
-             php artisan sync:despesas &&
-             apache2-foreground"
+      sh -c "php artisan config:cache && \
+             php artisan migrate --force && \
+             php artisan sync:deputados && \
+             php artisan sync:despesas && \
+             apache2-foreground || true"
 
   queue:
     build:
-      context: ./docker/php
+      context: .
+      dockerfile: ./docker/php/Dockerfile
     container_name: reta_queue
     volumes:
       - ./src:/var/www/html

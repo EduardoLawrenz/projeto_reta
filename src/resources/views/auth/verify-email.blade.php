@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 @extends('layouts.app')
 
 @section('content')
@@ -32,11 +31,7 @@
         </form>
     </div>
 </div>
-@endsection
-=======
-@extends('layouts.guest')
 
-@section('content')
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6 text-center">
@@ -64,4 +59,3 @@
     </div>
 </div>
 @endsection
->>>>>>> d624a76 (Corrigindo diversos erros)

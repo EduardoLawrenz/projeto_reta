@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 @extends('layouts.app')
 
 @section('content')
@@ -37,10 +36,8 @@
             Enviar link de redefinição
         </button>
     </form>
-=======
-@extends('layouts.guest')
+</div>
 
-@section('content')
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-5">
@@ -71,6 +68,5 @@
             </div>
         </div>
     </div>
->>>>>>> d624a76 (Corrigindo diversos erros)
 </div>
 @endsection
