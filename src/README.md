@@ -74,6 +74,3 @@ Caso algo falhe, reinicie o projeto com:
 
 📄 Licença
 Este projeto é de código aberto e pode ser utilizado para fins educacionais e profissionais.
-
-Autor
-Eduardo Lawrenz
