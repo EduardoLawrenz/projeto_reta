@@ -1,5 +1,6 @@
 # Logs
 *.log
+laravel.log
 
 # Sistema
 .DS_Store
@@ -7,37 +8,52 @@ Thumbs.db
 
 # Ambiente
 .env
-.env.backup
-.env.production
+.env.*
+!.env.example
 
 # PHP / Laravel
 .phpactor.json
 .phpunit.result.cache
 /.phpunit.cache
 /storage/*.key
+/storage/*.log
 
 # IDEs e ferramentas
-/.fleet
-/.idea
-/.nova
-/.vscode
-/.zed
+/.fleet/
+/.idea/
+/.nova/
+/.vscode/
+/.zed/
 
 # Composer / Auth
 auth.json
 
 # Node / Vite
 /node_modules/
-/public/build
+/public/build/
 /public/hot
 
-# Storage público e pail
-/public/storage
-/storage/pail
+# Storage público e temporário
+/public/storage/
+/storage/pail/
+/storage/app/public
 
 # Dependências do Laravel
 /vendor/
 
-# Homestead
+# Homestead / Vagrant
 Homestead.json
 Homestead.yaml
+
+# Docker (evita build de contextos desnecessários)
+docker-compose.override.yml
+docker-compose.dev.yml
+docker-compose.prod.yml
+docker/.env
+src/node_modules/
+src/public/storage/
+src/vendor/
+src/.env
+
+# Git
+.gitignore
