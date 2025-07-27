@@ -15,7 +15,6 @@
         </p>
 
         <p class="mb-3">
-<<<<<<< HEAD
             Aqui você poderá consultar a lista completa dos deputados, filtrar despesas por categorias, período, estado e partido, além de gerar relatórios exportáveis em CSV para análises detalhadas.
         </p>
 
@@ -24,10 +23,7 @@
         </p>
 
         <p class="mb-3">
-            Use o menu acima para navegar entre as funcionalidades disponíveis e explore o sistema. Caso precise, faça logout no menu do usuário.
-=======
             Use o menu acima para navegar entre as funcionalidades disponíveis e explorar o sistema.
->>>>>>> d624a76 (Corrigindo diversos erros)
         </p>
 
         <p class="text-muted mt-4">
